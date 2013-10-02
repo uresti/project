@@ -3,7 +3,7 @@
 class Bank
 {
 public:
-    Account* all;
+    Account* all=new Account[100];
     Account* Accounts= new Account[100];
     
     Bank()
