@@ -15,5 +15,5 @@ public:
 	int balance;
 	
 	Customer(const string& f,const string& l ,const int a, const int p, int bal)
-    : first_name(f), last_name(l), account_number(a), pin_number(p), balance(bal), transactions(new string [10]) {}
+    : first_name(f), last_name(l), account_number(a), pin_number(p), balance(bal), transactions(new string [11]) {}
 };
