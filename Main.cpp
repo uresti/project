@@ -188,6 +188,7 @@ void out(Bank& All) //Write out what is stored in Bank
 
 void create(Bank& All)
 {
+    int d=0;
     string fname;
     string lname;
     
@@ -198,15 +199,72 @@ void create(Bank& All)
     
     pin=rand() % 9000 + 1000;
     
-    Account* A= new Account(fname,lname,All.a_num,pin,1000);
-    
-    cout << "Your account number is " << All.a_num << " and your pin number is " << pin << ".\n";
-    cout << "Your beginning balance is $1000.\n";
-    
-    All.all[All.vplace]=*A;
-    ++All.vplace && ++All.a_num;
+    for(int i=1;i<100;++i)
+    {
+        if(((All.a_num-600000)-i)>0) *called=All.all[((All.a_num-600000)-i)];
+        if(called->balance==0 && ((All.a_num-600000)-i)>0)
+        {
+            Account* A= new Account(fname,lname,All.a_num-i,pin,1000);
+            
+            cout << "Your account number is " << All.a_num-i << " and your pin number is " << pin << ".\n";
+            cout << "Your beginning balance is $1000.\n";
+            
+            All.all[((All.a_num-600000)-i)]=*A;
+            d=1;
+            if(All.low>((All.a_num-600000)-i))--All.low;
+            break;
+        }
+    }
+    if(d==0)
+    {
+        Account* A= new Account(fname,lname,All.a_num,pin,1000);
+        
+        cout << "Your account number is " << All.a_num << " and your pin number is " << pin << ".\n";
+        cout << "Your beginning balance is $1000.\n";
+
+        All.all[All.vplace]=*A;
+        ++All.vplace && ++All.a_num;
+    }
+
 }
 
+void close(Bank& All)
+{
+    string answer;
+    int a_number;
+    int pin;
+    
+    cout << "Are you sure you want to close your account?(yes/no)\n";
+    cin >> answer;
+    
+    if(answer=="yes")
+    {
+        cout << "Enter your account number: \n";
+        cin >> a_number;
+        
+        cout << "Enter your PIN: \n";
+        cin >> pin;
+        
+        if(600000<a_number)
+        {
+            *called=All.all[(a_number-600000)];
+        
+            if(called->pin_number==pin)
+            {
+                if(called->balance>500) cout << "You have more than $500. Please see cashier to withdraw money.\n";
+                else
+                {
+                    cout << "You have withdrawn: $" << called->balance << '\n';
+                    Account* replace = new Account("Default","Default",0,1,0);
+                    All.all[(a_number-600000)]= *replace;
+                    cout << "Your account has been canceled.\n";
+                }
+            }
+            else cout << "Wrong PIN.\n";
+        }
+        else cout << "Bad account number.\n";
+    }
+}
 
 int main()
 {
@@ -227,5 +285,6 @@ int main()
     cin     >> operation;
     
     if(operation==1) create(All);
+    if(operation==2) close(All);
     out(All);
 }
