@@ -18,5 +18,5 @@ public:
     
     
     Bank()
-    : all(new Account[100]),anum(1),a_num(600001){}
+    : all(new Account[100]),vplace(1),a_num(600001),low(100){}
 };
