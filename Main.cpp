@@ -10,7 +10,7 @@ void fill(Bank& All) //Fill the bank with default accounts
     }
 }
 
-void in(Bank& All) //Write in what is to be stored in Bank
+void in(Bank& All) //Write in what is to be stored in Bank(all the accounts).
 {
     int spot=2;
     int linecount=1;
@@ -162,7 +162,7 @@ void in(Bank& All) //Write in what is to be stored in Bank
     ++All.a_num;
 }
 
-void out(Bank& All) //Write out what is stored in Bank
+void out(Bank& All) //Write out what is stored in Bank(all the accounts).
 {
     ofstream ofs1("Bank.txt", ofstream::out); 
     
