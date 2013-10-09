@@ -242,6 +242,8 @@ void close(Bank& All)
         cout << "Enter your account number: \n";
         cin >> a_number;
         
+        if(!a_number) throw runtime_error("Bad account number.\n");
+        
         cout << "Enter your PIN: \n";
         cin >> pin;
         
@@ -268,23 +270,34 @@ void close(Bank& All)
 
 int main()
 {
-    Bank All;
-    fill(All); 
-    
-    in(All);
-    cout << "This is your Piggy Bank. Welcome valued customer.\n";
-    int operation=0;
-    cout    << "Please select one of these operations (enter a number): \n"
-            << "1. Open a new account.\n"
-            << "2. Close the existing account.\n"
-            << "3. Withdraw money (up to $500).\n"
-            << "4. Deposit money.\n"
-            << "5. Account balance.\n"
-            << "6. List the last 10 transactions.\n"
-            << "7. Statistical information.\n\n";
-    cin     >> operation;
-    
-    if(operation==1) create(All);
-    if(operation==2) close(All);
-    out(All);
+	try{   
+		Bank All;
+		fill(All); 
+		
+		in(All);
+		cout << "This is your Piggy Bank. Welcome valued customer.\n";
+		int operation=0;
+		cout    << "Please select one of these operations (enter a number): \n"
+				<< "1. Open a new account.\n"
+				<< "2. Close the existing account.\n"
+				<< "3. Withdraw money (up to $500).\n"
+				<< "4. Deposit money.\n"
+				<< "5. Account balance.\n"
+				<< "6. List the last 10 transactions.\n"
+				<< "7. Statistical information.\n\n";
+		cin     >> operation;
+		
+		if(operation==1) create(All);
+		if(operation==2) close(All);
+		out(All);
+		}
+	
+	catch (exception& e) {
+		cerr << "Oops! " << e.what() << '\n'; 
+		return 1;
+	}
+	catch (...) {
+		cerr << "Oops: unknown exception!\n"; 
+		return 2;
+	}
 }
