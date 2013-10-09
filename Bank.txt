@@ -1,0 +1,6 @@
+[ customer Greatest Ever
+  account 600001
+  PIN 8807
+  balance 1000
+  transcations { () () () () () () () () () () }
+]
