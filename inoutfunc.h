@@ -37,3 +37,38 @@ void Bank_info_start(Bank& Main){
 	pins_get.close();
 	Main.isetup_bank();
 }
+
+//func saves changes made to customers, either closing/opening accounts 
+//the modifies the amount of customers and their corresponding info in files
+
+void Bank_info_end(Bank& Main) 
+{ 
+	int count = account_names.size(); 
+	for (count; count < 30; ++count) account_names.push_back(" "); 
+	
+	ofstream end_names(names_file.c_str());
+	for (int i = 0; i < account_names.size (); ++i) 
+	{
+		end_names << account_names[i] << endl; 
+	}
+	end_names.close();
+	
+	count = all_account_num.size();
+	for(count; count < 30; ++count) all_account_num.push_back(0);
+	ofstream end_accounts(accounts_file.c_str());
+	for (int i = 0; i < account_names.size(); ++i) 
+	{
+		end_accounts << all_account_num[i] << endl; 
+	}
+	end_accounts.close();
+	
+	count = all_pins.size(); 
+	for (count; count < 30; ++count) all_pins.push_back(0);
+	ofstream end_pins(pins_file.c_str()); 
+	for (int i = 0; i < account_names.size(); ++i) 
+	{
+		end_pins << all_pins[i] << endl;
+	}
+	end_pins.close(); 
+	Main.finalize_bank();
+}
