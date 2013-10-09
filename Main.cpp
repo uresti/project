@@ -1,6 +1,6 @@
 #include "Statistics.h"
 
-Account* called = new Account("Default","Default",0,1,0);
+Customer* called = new Customer("Default","Default",0,1,0);
 
 void fill(Bank& All) //Fill the bank with default accounts
 {
@@ -84,7 +84,7 @@ void in(Bank& All) //Write in what is to be stored in Bank
                 if ((spot+1)==(line.size()))
                 {
                     istringstream (s_balance) >> i_balance; //Convert string to int
-                    Account* A= new Account(fname,lname,i_a_number,i_pin,i_balance);
+                    Customer* A= new Customer(fname,lname,i_a_number,i_pin,i_balance);
                     All.all[All.vplace]=*A;
                     ++linecount;
                     ++linecount;
@@ -204,7 +204,7 @@ void create(Bank& All)
         if(((All.a_num-600000)-i)>0) *called=All.all[((All.a_num-600000)-i)];
         if(called->balance==0 && ((All.a_num-600000)-i)>0)
         {
-            Account* A= new Account(fname,lname,All.a_num-i,pin,1000);
+            Customer* A= new Customer(fname,lname,All.a_num-i,pin,1000);
             
             cout << "Your account number is " << All.a_num-i << " and your pin number is " << pin << ".\n";
             cout << "Your beginning balance is $1000.\n";
@@ -217,7 +217,7 @@ void create(Bank& All)
     }
     if(d==0)
     {
-        Account* A= new Account(fname,lname,All.a_num,pin,1000);
+        Customer* A= new Customer(fname,lname,All.a_num,pin,1000);
         
         cout << "Your account number is " << All.a_num << " and your pin number is " << pin << ".\n";
         cout << "Your beginning balance is $1000.\n";
@@ -255,7 +255,7 @@ void close(Bank& All)
                 else
                 {
                     cout << "You have withdrawn: $" << called->balance << '\n';
-                    Account* replace = new Account("Default","Default",0,1,0);
+                    Customer* replace = new Customer("Default","Default",0,1,0);
                     All.all[(a_number-600000)]= *replace;
                     cout << "Your account has been canceled.\n";
                 }
