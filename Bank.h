@@ -16,7 +16,6 @@ public:
     int addvplace()   {return ++vplace;};
     int add_anum()  {return ++a_num;};*/
     
-    
     Bank()
     : all(new Customer[100]),vplace(1),a_num(600001),low(100){}
 };
