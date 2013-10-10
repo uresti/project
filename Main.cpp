@@ -122,7 +122,7 @@ void withdraw(Bank& All,int a_number)
         
         cout << "Enter the amount to withdraw: $";
         cin >> withdraw;
-        if(!withdraw) throw runtime_error("Not a valid withdraw amount!\n");
+        if((!withdraw && withdraw<0.00) || withdraw<0.00) throw runtime_error("Not a valid withdraw amount!\n");
         
         if(called->balance<1000 && withdraw>=0.001)
         {
@@ -155,6 +155,7 @@ void withdraw(Bank& All,int a_number)
                 called->transactions[i]=called->transactions[i-1];
                 if(i==1) called->transactions[1]= '(' + year + '-' + month + '-' + day + ' ' + "Withdraw $" + trans + ')';
             }
+            cout << "Account balance: $" << called->balance << '\n';
         }
         else if(called->balance-withdraw<0) cout << "Insufficient funds.\n";
         else cout << "Can't withdraw more than $500.\n";
@@ -182,7 +183,7 @@ void deposit(Bank& All,int a_number)
     {
         cout << "Enter the amount to deposit: $";
         cin >> deposit;
-        if(!deposit) throw runtime_error("Not a valid deposit amount!\n");
+        if((!deposit && deposit<0.00) || deposit<0.00) throw runtime_error("Not a valid deposit amount!\n");
         
 
         called->balance=called->balance+deposit;
@@ -208,12 +209,48 @@ void deposit(Bank& All,int a_number)
             called->transactions[i]=called->transactions[i-1];
             if(i==1) called->transactions[1]= '(' + year + '-' + month + '-' + day + ' ' + "Deposit $" + trans + ')';
         }
-        
+        cout << "Account balance: $" << called->balance << '\n';
         All.all[(a_number-600000)]=*called;
     }
     else cout << "Wrong PIN.\n";
 }
 
+void account_balance(Bank& All,int a_number)
+{
+    int pin;
+
+    cout << "Enter your PIN: \n";
+    cin >> pin;
+    if(!pin) throw runtime_error("Invalid pin number!\n");
+    
+     *called=All.all[(a_number-600000)];
+    
+    if(called->pin_number==pin)
+    {
+        cout << "Account balance: $" << called->balance << '\n';
+    }
+    else cout << "Wrong PIN.\n";
+}
+
+void transactions(Bank& All,int a_number)
+{
+    int pin;
+    
+    cout << "Enter your PIN: \n";
+    cin >> pin;
+    if(!pin) throw runtime_error("Invalid pin number!\n");
+    
+    *called=All.all[(a_number-600000)];
+    
+    if(called->pin_number==pin)
+    {
+        for(int i=1;i<11;++i)
+        {
+            cout << called->transactions[i] << '\n';
+        }
+    }
+    else cout << "Wrong PIN.\n";
+}
 
 int main()
 {
@@ -258,6 +295,8 @@ int main()
                 
                 if(operation==3) withdraw(All,accountnumber);
                 if(operation==4) deposit(All,accountnumber);
+                if(operation==5) account_balance(All,accountnumber);
+                if(operation==6) transactions(All,accountnumber);
                 
                 cout << "Does you wish to carry out another action?(yes/no)\n";
                 cin >> answer;
