@@ -71,3 +71,30 @@ istream& operator>>(istream& is, Bank& All)
     ++All.a_num;
     return is;
 }
+
+ostream& operator<<(ostream& os, Bank& All)
+{
+    Customer* called = new Customer("Default","Default",0,1,0);
+    
+	ofstream f_out("Bank.txt", ofstream::out);
+    
+    for(int i=All.low;i<All.vplace;++i)
+    {
+        *called=All.all[i];
+        if(called->balance!=0)
+        {
+            f_out << "[ customer " << called->first_name << ' ' << called->last_name << endl;
+            f_out << "  account " << called->account_number << endl;
+            f_out << "  PIN " << called->pin_number << endl;
+            f_out << "  balance " << called->balance << endl;
+            f_out << "  transcations { ";
+            for(int j=1;j<11;++j)
+            {
+                f_out << called->transactions[j] << ' ';
+            }
+            f_out << " }" << endl;
+            f_out << ']' << endl;
+        }
+    }
+    return os;
+}
