@@ -164,6 +164,57 @@ void withdraw(Bank& All,int a_number)
     else cout << "Wrong PIN.\n";
 }
 
+void deposit(Bank& All,int a_number)
+{
+    time_t t = time(0);
+    struct tm * now = localtime( & t );
+    
+    int pin;
+    double deposit;
+    
+    cout << "Enter your PIN: \n";
+    cin >> pin;
+    if(!pin) throw runtime_error("Invalid pin number!\n");
+    
+    *called=All.all[(a_number-600000)];
+    
+    if(called->pin_number==pin)
+    {
+        cout << "Enter the amount to deposit: $";
+        cin >> deposit;
+        if(!deposit) throw runtime_error("Not a valid deposit amount!\n");
+        
+
+        called->balance=called->balance+deposit;
+            
+        stringstream year1;
+        year1 << (now->tm_year+1900);
+        string year(year1.str());
+            
+        stringstream month1;
+        month1 << (now->tm_mon+1);
+        string month(month1.str());
+            
+        stringstream day1;
+        day1 << (now->tm_mday);
+        string day(day1.str());
+            
+        stringstream trans1;
+        trans1 << (deposit);
+        string trans(trans1.str());
+            
+        for(int i=10; i>0;--i)
+        {
+            called->transactions[i]=called->transactions[i-1];
+            if(i==1) called->transactions[1]= '(' + year + '-' + month + '-' + day + ' ' + "Deposit $" + trans + ')';
+        }
+        
+        All.all[(a_number-600000)]=*called;
+    }
+    else cout << "Wrong PIN.\n";
+}
+
+
 int main()
 {
     Bank All;
@@ -206,6 +257,7 @@ int main()
                 }
                 
                 if(operation==3) withdraw(All,accountnumber);
+                if(operation==4) deposit(All,accountnumber);
                 
                 cout << "Does you wish to carry out another action?(yes/no)\n";
                 cin >> answer;
@@ -214,17 +266,17 @@ int main()
             }
             cout << All;
             cout << "Thank you!\n";
-	}
+		}
 	
 	catch (exception& e)
-    	{
-        	cout << All;
+    {
+        cout << All;
 		cerr << "Oops! " << e.what() << '\n'; 
 		return 1;
 	}
 	catch (...)
-    	{
-        	cout << All;
+    {
+        cout << All;
 		cerr << "Oops: unknown exception!\n"; 
 		return 2;
 	}
