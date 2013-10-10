@@ -9,13 +9,65 @@ public:
 
     Customer* all;
     
-    /*int callvplace()  {return vplace;};
-    int calla_num() {return a_num;};
-    int calllow() {return low;};
-    
-    int addvplace()   {return ++vplace;};
-    int add_anum()  {return ++a_num;};*/
-    
     Bank()
     : all(new Customer[100]),vplace(1),a_num(600001),low(100){}
 };
+
+
+istream& operator>>(istream& is, Bank& All)
+{
+    Customer* called = new Customer("Default","Default",0,1,0);
+    
+    ifstream f_in("Bank.txt",ios::in);
+
+    string next;
+    string first;
+    string last;
+    string transaction;
+    int account;
+    int pin;
+    double balance;
+    
+    while(!f_in.eof())
+    {
+        f_in >> next;
+        
+        if(next=="customer")
+        {
+            f_in >> first;
+            f_in >> last;
+        }
+        if(next=="account")
+        {
+            f_in >> account;
+            if((account-600000)>All.vplace) All.vplace=(account-600000);
+            if((account-600000)<All.low && account!=0) All.low=(account-600000);
+            All.a_num=account;
+        }
+        if(next=="PIN")
+        {
+            f_in >> pin;
+        }
+        if(next=="balance")
+        {
+            f_in >> balance;
+            Customer* A= new Customer(first,last,account,pin,balance);
+            All.all[All.vplace]=*A;
+        }
+        if(next=="{")
+        {
+            for(int i=1;i<11;++i)
+            {
+                f_in >> transaction;
+                if(transaction=="}") break;
+                *called=All.all[(account-600000)];
+                called->transactions[i]=transaction;
+                transaction="";
+            }
+        }
+   
+    }
+    ++All.vplace;
+    ++All.a_num;
+    return is;
+}
