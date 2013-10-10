@@ -24,6 +24,7 @@ istream& operator>>(istream& is, Bank& All)
     string first;
     string last;
     string transaction;
+    string T;
     int account;
     int pin;
     double balance;
@@ -58,11 +59,19 @@ istream& operator>>(istream& is, Bank& All)
         {
             for(int i=1;i<11;++i)
             {
-                f_in >> transaction;
+                for(int j=0;j<3;++j)
+                {
+                    f_in >> transaction;
+                    if(transaction=="}") break;
+                    T += transaction;
+                    if(j<2) T += " ";
+                }
                 if(transaction=="}") break;
                 *called=All.all[(account-600000)];
-                called->transactions[i]=transaction;
+                called->transactions[i]=T;
+                
                 transaction="";
+                T="";
             }
         }
    
