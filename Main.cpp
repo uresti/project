@@ -10,189 +10,13 @@ void fill(Bank& All) //Fill the bank with default accounts
     }
 }
 
-void in(Bank& All) //Write in what is to be stored in Bank(all the accounts).
-{
-    int spot=2;
-    int linecount=1;
-    int reset=0;
-    
-    string fname;
-    string lname;
-    string s_a_number;
-    string s_pin;
-    string s_balance;
-    
-    int i_a_number=0;
-    int i_pin=0;
-    int i_balance=0;
-    
-    ifstream ifs1("Bank.txt", ifstream::in);
-    
-    while(true)
-    {
-        string line;
-        
-        if(linecount==1) fname="";
-        if(linecount==1) lname="";
-        if(linecount==2) s_a_number="";
-        if(linecount==3) s_pin="";
-        if(linecount==4) s_balance="";
-        
-        if(linecount==1)
-        {
-            i_a_number=0;
-            i_pin=0;
-            i_balance=0;
-        }
-        
-        getline(ifs1,line);
-        
-        if(linecount==6)
-        {
-            reset=1;
-        }
-        
-        if(linecount==5)
-        {
-            spot=18;
-            for(int i=1;i<11;++i)
-            {
-                string T="";
-                for (spot;spot<line.size(); ++spot)
-                {
-                    if(line[spot]!=')')
-                    {
-                        T += line[spot];
-                    }
-                    else
-                    {
-                        spot=spot+3;
-                        break;
-                    }
-                }
-                *called=All.all[(i_a_number-600000)];
-                called->transactions[i]=T;
-                if(i==10) ++linecount;
-            }
-        }
-        
-        if(linecount==4)
-        {
-            for (spot=10;spot<line.size(); ++spot)
-            {
-                s_balance += line[spot];
-                if ((spot+1)==(line.size()))
-                {
-                    istringstream (s_balance) >> i_balance; //Convert string to int
-                    Customer* A= new Customer(fname,lname,i_a_number,i_pin,i_balance);
-                    All.all[All.vplace]=*A;
-                    ++linecount;
-                    ++linecount;
-                }
-            }
-        }
-        
-        if(linecount==3)
-        {
-            for (spot=6;spot<line.size(); ++spot)
-            {
-                s_pin += line[spot];
-                if ((spot+1)==(line.size()))
-                {
-                    istringstream (s_pin) >> i_pin; //Convert string to int
-                    ++linecount;
-                }
-            }
-            
-        }
-        
-        if(linecount==2) //Account number
-        {
-            for(spot=10;spot<line.size(); ++spot)
-            {
-                s_a_number += line[spot];
-                
-                if ((spot+1)==(line.size()))
-                {
-                    istringstream (s_a_number) >> i_a_number; //Convert string to int
-                    if((i_a_number-600000)>All.vplace) All.vplace=(i_a_number-600000);
-                    if((i_a_number-600000)<All.low && i_a_number!=0) All.low=(i_a_number-600000);
-                    All.a_num=i_a_number;
-                    ++linecount;
-                }
-            }
-        }
-        
-        if(linecount==1) //First and last name
-        {
-            for (spot=11;spot<line.size(); ++spot) //n starts at 11 because the beginning of the first name is 11 characters over.
-            {
-                if (line[spot]!=' ')
-                {
-                    fname += line[spot];
-                }
-                else
-                {
-                    ++spot;
-                    break;
-                }
-            }
-            
-            for (;spot<line.size(); ++spot)
-            {
-                lname += line[spot];
-                if ((spot+1)==(line.size()))
-                {
-                    ++linecount;
-                }
-            }
-            
-        }
-        
-        if(reset==1)
-        {
-            linecount=1;
-            reset=0;
-        }
-        
-        if(ifs1.eof()) break;
-        ifs1.clear();
-    }
-    ++All.vplace;
-    ++All.a_num;
-}
-
-void out(Bank& All) //Write out what is stored in Bank(all the accounts).
-{
-    ofstream ofs1("Bank.txt", ofstream::out); 
-    
-    for(int i=All.low;i<All.vplace;++i)
-    {
-        *called=All.all[i];
-        if(called->balance!=0)
-        {
-            ofs1 << "[ customer " << called->first_name << ' ' << called->last_name << endl;
-            ofs1 << "  account " << called->account_number << endl;
-            ofs1 << "  PIN " << called->pin_number << endl;
-            ofs1 << "  balance " << called->balance << endl;
-            ofs1 << "  transcations { ";
-            for(int j=1;j<11;++j)
-            {
-                ofs1 << '(' << called->transactions[j] << ") ";
-            }
-            ofs1 << "}" << endl;
-            ofs1 << ']' << endl;
-        }
-    }
-}
-
 void create(Bank& All)
 {
-    int d=0;
     string fname;
     string lname;
     
     int pin=0;
+    int d=0;
     
     cout << "Enter your first and last name:\n";
     cin >> fname >> lname;
@@ -237,17 +61,21 @@ void close(Bank& All)
     cout << "Are you sure you want to close your account?(yes/no)\n";
     cin >> answer;
     
+    if(answer!="yes" && answer!="no") throw runtime_error("Invalid input.\n");
+    
     if(answer=="yes")
     {
         cout << "Enter your account number: \n";
         cin >> a_number;
         
-        if(!a_number) throw runtime_error("Bad account number.\n");
+        if(!a_number) throw runtime_error("Not a valid account number!\n");
         
         cout << "Enter your PIN: \n";
         cin >> pin;
         
-        if(600000<a_number)
+        if(!pin) throw runtime_error("Not a valid pin number!\n");
+        
+        if(600000<=a_number && a_number<=All.a_num)
         {
             *called=All.all[(a_number-600000)];
         
@@ -268,35 +96,135 @@ void close(Bank& All)
     }
 }
 
+void withdraw(Bank& All,int a_number)
+{
+    time_t t = time(0);
+    struct tm * now = localtime( & t );
+    
+    int pin;
+    double withdraw;
+    
+    cout << "Enter your PIN: \n";
+    cin >> pin;
+    if(!pin) throw runtime_error("Invalid pin number!\n");
+    
+    *called=All.all[(a_number-600000)];
+
+    if(called->pin_number==pin)
+    {
+        if(called->balance<50) cout << "You do not have sufﬁcient amount of money in your account to maintain it.\n";
+        if(called->balance<1000)
+        {
+            cout    << "It will cost you $10 to make a withdraw since your funds are less than $1000!\n"
+                    << "If you wish to incur no charge, please withdraw $0.00!\n";
+        }
+        
+        
+        cout << "Enter the amount to withdraw: $";
+        cin >> withdraw;
+        if(!withdraw) throw runtime_error("Not a valid withdraw amount!\n");
+        
+        if(called->balance<1000 && withdraw>=0.001)
+        {
+            cout << "Your funds are less than $1000 thus carring out a withdraw has cost you $10.\n";
+            called->balance=called->balance-10;
+        }
+        
+        if(called->balance-withdraw>0 && withdraw<=500)
+        {
+            called->balance=called->balance-withdraw;
+            
+            stringstream year1;
+            year1 << (now->tm_year+1900);
+            string year(year1.str());
+            
+            stringstream month1;
+            month1 << (now->tm_mon+1);
+            string month(month1.str());
+            
+            stringstream day1;
+            day1 << (now->tm_mday);
+            string day(day1.str());
+            
+            stringstream trans1;
+            trans1 << (withdraw);
+            string trans(trans1.str());
+            
+            for(int i=10; i>0;--i)
+            {
+                called->transactions[i]=called->transactions[i-1];
+                if(i==1) called->transactions[1]= '(' + year + '-' + month + '-' + day + ' ' + "Withdraw $" + trans + ')';
+            }
+        }
+        else if(called->balance-withdraw<0) cout << "Insufficient funds.\n";
+        else cout << "Can't withdraw more than $500.\n";
+        
+        All.all[(a_number-600000)]=*called;
+    }
+    else cout << "Wrong PIN.\n";
+}
+
 int main()
 {
-	try{   
-		Bank All;
-		fill(All); 
+    Bank All;
+    fill(All);
+
+	try{
+            cin >> All;
+            cout << "This is your Piggy Bank. Welcome valued customer!\n";
+            int accountnumber=0;
+            int accountenter=0;
+            string answer="yes";
+       
+            while(answer=="yes")
+            {
+                int operation=0;
+                
+                cout    << "Please select one of these operations (enter a number): \n"
+                        << "1. Open a new account.\n"
+                        << "2. Close the existing account.\n"
+                        << "3. Withdraw money (up to $500).\n"
+                        << "4. Deposit money.\n"
+                        << "5. Account balance.\n"
+                        << "6. List the last 10 transactions.\n"
+                        << "7. Statistical information.\n\n";
+                
+                cin     >> operation;
+                
+                if(!operation) throw runtime_error("Not a valid selection!\n");
+                if(operation<1 || operation>7) throw runtime_error("Not a valid selection!\n");
 		
-		in(All);
-		cout << "This is your Piggy Bank. Welcome valued customer.\n";
-		int operation=0;
-		cout    << "Please select one of these operations (enter a number): \n"
-				<< "1. Open a new account.\n"
-				<< "2. Close the existing account.\n"
-				<< "3. Withdraw money (up to $500).\n"
-				<< "4. Deposit money.\n"
-				<< "5. Account balance.\n"
-				<< "6. List the last 10 transactions.\n"
-				<< "7. Statistical information.\n\n";
-		cin     >> operation;
-		
-		if(operation==1) create(All);
-		if(operation==2) close(All);
-		out(All);
-		}
+                if(operation==1) create(All);
+                if(operation==2) close(All);
+            
+                else if(accountenter==0 && operation!=1 && operation!=2)
+                {
+                    cout << "Enter your account number: \n";
+                    cin >> accountnumber;
+                    if(!accountnumber || accountnumber<=600000 || accountnumber>=All.a_num) throw runtime_error("Not a valid account number!\n");
+                    ++accountenter;
+                }
+                
+                if(operation==3) withdraw(All,accountnumber);
+                
+                cout << "Does you wish to carry out another action?(yes/no)\n";
+                cin >> answer;
+                if(answer!="yes" && answer!="no") throw runtime_error("Invalid input.\n");
+                if(answer=="no") break;
+            }
+            cout << All;
+            cout << "Thank you!\n";
+	}
 	
-	catch (exception& e) {
+	catch (exception& e)
+    	{
+        	cout << All;
 		cerr << "Oops! " << e.what() << '\n'; 
 		return 1;
 	}
-	catch (...) {
+	catch (...)
+    	{
+        	cout << All;
 		cerr << "Oops: unknown exception!\n"; 
 		return 2;
 	}
