@@ -13,7 +13,7 @@ class Customer
 public:
 	string first_name;
 	string last_name;
-    string* transactions;
+    	string* transactions;
 	int account_number;
 	int pin_number;
 	int balance;
