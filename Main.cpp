@@ -254,7 +254,8 @@ void transactions(Bank& All,int a_number) //Check last 10 transactions.
     {
         for(int i=1;i<11;++i)
         {
-            cout << called->transactions[i] << '\n'; // Print out the last 10 transactions.
+        	if(called->transactions[i]=="") break;
+            	cout << called->transactions[i] << '\n'; // Print out the last 10 transactions.
         }
     }
     else cout << "Wrong PIN.\n";
