@@ -42,9 +42,9 @@ void create(Bank& All) //Create an account with the bank.
             cout << "Your account number is " << All.a_num-i << " and your pin number is " << pin << ".\n";
             cout << "Your beginning balance is $" << balance << '\n';
             
-            All.all[((All.a_num-600000)-i)]=*A;
+            All.all[((All.a_num-600000)-i)]=*A; //Put the account into the bank.
             d=1;
-            if(All.low>((All.a_num-600000)-i))--All.low;
+            if(All.low>((All.a_num-600000)-i))--All.low; //If needed, then decrease the counter for the lowest position in the array.
             break;
         }
     }
@@ -55,7 +55,7 @@ void create(Bank& All) //Create an account with the bank.
         cout << "Your account number is " << All.a_num << " and your pin number is " << pin << ".\n";
         cout << "Your beginning balance is $" << balance << '\n';
 
-        All.all[All.vplace]=*A;
+        All.all[All.vplace]=*A; //Put the account into the bank.
         ++All.vplace && ++All.a_num; //Increase the counter of the position in the array and increase the account number.
     }
 }
@@ -69,7 +69,7 @@ void close(Bank& All) //Close an account with the Bank.
     cout << "Are you sure you want to close your account?(yes/no)\n";
     cin >> answer;
     
-    if(answer!="yes" && answer!="no") throw runtime_error("Invalid input.\n");
+    if(answer!="yes" && answer!="no") throw runtime_error("Invalid input.\n"); //Check valid response.
     
     if(answer=="yes")
     {
@@ -116,7 +116,7 @@ void withdraw(Bank& All,int a_number) //Withdraw money from an account.
     cin >> pin;
     if(!pin) throw runtime_error("Invalid pin number!\n");
     
-    *called=All.all[(a_number-600000)];
+    *called=All.all[(a_number-600000)]; //Get the account.
 
     if(called->pin_number==pin)
     {
@@ -132,7 +132,7 @@ void withdraw(Bank& All,int a_number) //Withdraw money from an account.
         cin >> withdraw;
         if((!withdraw && withdraw<0.00) || withdraw<0.00) throw runtime_error("Not a valid withdraw amount!\n");
         
-        if(called->balance<1000 && withdraw>=0.001)
+        if(called->balance<1000 && withdraw>=0.001) //Used to charge the $10 fee.
         {
             cout << "Your funds are less than $1000 thus carring out a withdraw has cost you $10.\n";
             called->balance=called->balance-10;
@@ -185,7 +185,7 @@ void deposit(Bank& All,int a_number) //Deposit money into an account.
     cin >> pin;
     if(!pin) throw runtime_error("Invalid pin number!\n");
     
-    *called=All.all[(a_number-600000)];
+    *called=All.all[(a_number-600000)]; //Get the account.
     
     if(called->pin_number==pin)
     {
@@ -262,11 +262,11 @@ void transactions(Bank& All,int a_number) //Check last 10 transactions.
 
 int main()
 {
-    Bank All;
+    Bank All; //Make the bank and fill it.
     fill(All);
 
 	try{
-            cin >> All;
+            cin >> All; //Read in bank info from file.
             cout << "This is your Piggy Bank. Welcome valued customer!\n";
             int accountnumber=0;
             int accountenter=0;
@@ -311,7 +311,7 @@ int main()
                 if(answer!="yes" && answer!="no") throw runtime_error("Invalid input.\n");
                 if(answer=="no") break;
             }
-            cout << All;
+            cout << All; //Read out bank info to file.
             cout << "Thank you!\n";
 		}
 	
