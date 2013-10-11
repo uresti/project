@@ -16,6 +16,7 @@ void create(Bank& All)
     string lname;
     
     int pin=0;
+    int balance=0;
     int d=0;
     
     cout << "Enter your first and last name:\n";
@@ -23,15 +24,22 @@ void create(Bank& All)
     
     pin=rand() % 9000 + 1000;
     
+    cout << "You must deposit at least $1000 to open an account.\n";
+    cout << "Enter the amount to deposit: $";
+    
+    cin >> balance;
+    
+    if((!balance && balance<1000.00) || balance<1000.00) throw runtime_error("Not a valid deposit amount!\n");
+    
     for(int i=1;i<100;++i)
     {
         if(((All.a_num-600000)-i)>0) *called=All.all[((All.a_num-600000)-i)];
         if(called->balance==0 && ((All.a_num-600000)-i)>0)
         {
-            Customer* A= new Customer(fname,lname,All.a_num-i,pin,1000);
+            Customer* A= new Customer(fname,lname,All.a_num-i,pin,balance);
             
             cout << "Your account number is " << All.a_num-i << " and your pin number is " << pin << ".\n";
-            cout << "Your beginning balance is $1000.\n";
+            cout << "Your beginning balance is $" << balance << '\n';
             
             All.all[((All.a_num-600000)-i)]=*A;
             d=1;
@@ -41,15 +49,14 @@ void create(Bank& All)
     }
     if(d==0)
     {
-        Customer* A= new Customer(fname,lname,All.a_num,pin,1000);
+        Customer* A= new Customer(fname,lname,All.a_num,pin,balance);
         
         cout << "Your account number is " << All.a_num << " and your pin number is " << pin << ".\n";
-        cout << "Your beginning balance is $1000.\n";
+        cout << "Your beginning balance is $" << balance << '\n';
 
         All.all[All.vplace]=*A;
         ++All.vplace && ++All.a_num;
     }
-
 }
 
 void close(Bank& All)
