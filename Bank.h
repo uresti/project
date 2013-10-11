@@ -14,7 +14,7 @@ public:
 };
 
 
-istream& operator>>(istream& is, Bank& All)
+istream& operator>>(istream& is, Bank& All) //Cin bank.
 {
     Customer* called = new Customer("Default","Default",0,1,0);
     
@@ -33,29 +33,29 @@ istream& operator>>(istream& is, Bank& All)
     {
         f_in >> next;
         
-        if(next=="customer")
+        if(next=="customer") //Get first and last name.
         {
             f_in >> first;
             f_in >> last;
         }
-        if(next=="account")
+        if(next=="account") //Get the account number.
         {
             f_in >> account;
-            if((account-600000)>All.vplace) All.vplace=(account-600000);
-            if((account-600000)<All.low && account!=0) All.low=(account-600000);
+            if((account-600000)>All.vplace) All.vplace=(account-600000); //If the account position is greater than the greatest position in the array, than set the array position equal to the account position.
+            if((account-600000)<All.low && account!=0) All.low=(account-600000); 
             All.a_num=account;
         }
-        if(next=="PIN")
+        if(next=="PIN") //Get pin.
         {
             f_in >> pin;
         }
-        if(next=="balance")
+        if(next=="balance") //Get balance.
         {
             f_in >> balance;
             Customer* A= new Customer(first,last,account,pin,balance);
             All.all[All.vplace]=*A;
         }
-        if(next=="{")
+        if(next=="{") //Get transactions.
         {
             for(int i=1;i<11;++i)
             {
@@ -81,7 +81,7 @@ istream& operator>>(istream& is, Bank& All)
     return is;
 }
 
-ostream& operator<<(ostream& os, Bank& All)
+ostream& operator<<(ostream& os, Bank& All) //Cout bank.
 {
     Customer* called = new Customer("Default","Default",0,1,0);
     
