@@ -313,7 +313,7 @@ int main()
             }
             cout << All; //Read out bank info to file.
             cout << "Thank you!\n";
-		}
+	}
 	
 	catch (exception& e)
     {
