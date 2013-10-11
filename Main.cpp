@@ -22,6 +22,7 @@ void create(Bank& All)
     cout << "Enter your first and last name:\n";
     cin >> fname >> lname;
     
+    srand(time(NULL));
     pin=rand() % 9000 + 1000;
     
     cout << "You must deposit at least $1000 to open an account.\n";
