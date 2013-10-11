@@ -1,8 +1,8 @@
 #include "Statistics.h"
 
-Customer* called = new Customer("Default","Default",0,1,0);
+Customer* called = new Customer("Default","Default",0,1,0); //Default account
 
-void fill(Bank& All) //Fill the bank with default accounts
+void fill(Bank& All) //Fill the bank with default accounts.
 {
     for(int i=0;i<100;++i)
     {
@@ -10,7 +10,7 @@ void fill(Bank& All) //Fill the bank with default accounts
     }
 }
 
-void create(Bank& All)
+void create(Bank& All) //Create an account with the bank.
 {
     string fname;
     string lname;
@@ -22,19 +22,19 @@ void create(Bank& All)
     cout << "Enter your first and last name:\n";
     cin >> fname >> lname;
     
-    srand(time(NULL));
-    pin=rand() % 9000 + 1000;
+    srand(time(NULL)); //Randomize 'rand' based on time.
+    pin=rand() % 9000 + 1000; //Generate a random number between 1000 and 9999.
     
     cout << "You must deposit at least $1000 to open an account.\n";
     cout << "Enter the amount to deposit: $";
     
     cin >> balance;
     
-    if((!balance && balance<1000.00) || balance<1000.00) throw runtime_error("Not a valid deposit amount!\n");
+    if((!balance && balance<1000.00) || balance<1000.00) throw runtime_error("Not a valid deposit amount!\n"); //Check to make sure it's a number and greater than 1000.
     
-    for(int i=1;i<100;++i)
+    for(int i=1;i<100;++i) //The purpose of this 'for loop' is to fill spots in the Bank array before the latest account. This deals with the case that an account has been closed.
     {
-        if(((All.a_num-600000)-i)>0) *called=All.all[((All.a_num-600000)-i)];
+        if(((All.a_num-600000)-i)>0) *called=All.all[((All.a_num-600000)-i)]; //Set 'default' account equal to one less than the latest account.
         if(called->balance==0 && ((All.a_num-600000)-i)>0)
         {
             Customer* A= new Customer(fname,lname,All.a_num-i,pin,balance);
@@ -48,7 +48,7 @@ void create(Bank& All)
             break;
         }
     }
-    if(d==0)
+    if(d==0) //If all the spots have been filled before the latest account, then create one after the latest account (in the array).
     {
         Customer* A= new Customer(fname,lname,All.a_num,pin,balance);
         
@@ -56,11 +56,11 @@ void create(Bank& All)
         cout << "Your beginning balance is $" << balance << '\n';
 
         All.all[All.vplace]=*A;
-        ++All.vplace && ++All.a_num;
+        ++All.vplace && ++All.a_num; //Increase the counter of the position in the array and increase the account number.
     }
 }
 
-void close(Bank& All)
+void close(Bank& All) //Close an account with the Bank.
 {
     string answer;
     int a_number;
@@ -85,7 +85,7 @@ void close(Bank& All)
         
         if(600000<=a_number && a_number<=All.a_num)
         {
-            *called=All.all[(a_number-600000)];
+            *called=All.all[(a_number-600000)]; //Get the account.
         
             if(called->pin_number==pin)
             {
@@ -94,7 +94,7 @@ void close(Bank& All)
                 {
                     cout << "You have withdrawn: $" << called->balance << '\n';
                     Customer* replace = new Customer("Default","Default",0,1,0);
-                    All.all[(a_number-600000)]= *replace;
+                    All.all[(a_number-600000)]= *replace; //Replace the account with a 'default account' so that it will not be written out to the file.
                     cout << "Your account has been canceled.\n";
                 }
             }
@@ -104,9 +104,9 @@ void close(Bank& All)
     }
 }
 
-void withdraw(Bank& All,int a_number)
+void withdraw(Bank& All,int a_number) //Withdraw money from an account.
 {
-    time_t t = time(0);
+    time_t t = time(0); //Used to generate the date.
     struct tm * now = localtime( & t );
     
     int pin;
@@ -142,40 +142,40 @@ void withdraw(Bank& All,int a_number)
         {
             called->balance=called->balance-withdraw;
             
-            stringstream year1;
+            stringstream year1; //Converts the 'int' year into a 'string'.
             year1 << (now->tm_year+1900);
             string year(year1.str());
             
-            stringstream month1;
+            stringstream month1; //Converts the 'int' month into a 'string'.
             month1 << (now->tm_mon+1);
             string month(month1.str());
             
-            stringstream day1;
+            stringstream day1; //Converts the 'int' day into a 'string'.
             day1 << (now->tm_mday);
             string day(day1.str());
             
-            stringstream trans1;
+            stringstream trans1; //Converts the 'int' withdraw into a 'string'.
             trans1 << (withdraw);
             string trans(trans1.str());
             
             for(int i=10; i>0;--i)
             {
-                called->transactions[i]=called->transactions[i-1];
-                if(i==1) called->transactions[1]= '(' + year + '-' + month + '-' + day + ' ' + "Withdraw $" + trans + ')';
+                called->transactions[i]=called->transactions[i-1]; //Moves all the previous transactions over one in the array.
+                if(i==1) called->transactions[1]= '(' + year + '-' + month + '-' + day + ' ' + "Withdraw $" + trans + ')'; //Combines all the strings and stores it in the array.
             }
             cout << "Account balance: $" << called->balance << '\n';
         }
         else if(called->balance-withdraw<0) cout << "Insufficient funds.\n";
         else cout << "Can't withdraw more than $500.\n";
         
-        All.all[(a_number-600000)]=*called;
+        All.all[(a_number-600000)]=*called; //Put the account back into the bank.
     }
     else cout << "Wrong PIN.\n";
 }
 
-void deposit(Bank& All,int a_number)
+void deposit(Bank& All,int a_number) //Deposit money into an account.
 {
-    time_t t = time(0);
+    time_t t = time(0); //Used to generate the date.
     struct tm * now = localtime( & t );
     
     int pin;
@@ -196,34 +196,34 @@ void deposit(Bank& All,int a_number)
 
         called->balance=called->balance+deposit;
             
-        stringstream year1;
+        stringstream year1; //Converts the 'int' year into a 'string'.
         year1 << (now->tm_year+1900);
         string year(year1.str());
             
-        stringstream month1;
+        stringstream month1; //Converts the 'int' month into a 'string'.
         month1 << (now->tm_mon+1);
         string month(month1.str());
             
-        stringstream day1;
+        stringstream day1; //Converts the 'int' day into a 'string'.
         day1 << (now->tm_mday);
         string day(day1.str());
             
-        stringstream trans1;
+        stringstream trans1; //Converts the 'int' deposit into a 'string'.
         trans1 << (deposit);
         string trans(trans1.str());
             
         for(int i=10; i>0;--i)
         {
-            called->transactions[i]=called->transactions[i-1];
-            if(i==1) called->transactions[1]= '(' + year + '-' + month + '-' + day + ' ' + "Deposit $" + trans + ')';
+            called->transactions[i]=called->transactions[i-1]; //Moves all the previous transactions over one in the array.
+            if(i==1) called->transactions[1]= '(' + year + '-' + month + '-' + day + ' ' + "Deposit $" + trans + ')'; //Combines all the strings and stores it in the array.
         }
         cout << "Account balance: $" << called->balance << '\n';
-        All.all[(a_number-600000)]=*called;
+        All.all[(a_number-600000)]=*called; //Put the account back into the bank.
     }
     else cout << "Wrong PIN.\n";
 }
 
-void account_balance(Bank& All,int a_number)
+void account_balance(Bank& All,int a_number) //Check account balance.
 {
     int pin;
 
@@ -231,16 +231,16 @@ void account_balance(Bank& All,int a_number)
     cin >> pin;
     if(!pin) throw runtime_error("Invalid pin number!\n");
     
-     *called=All.all[(a_number-600000)];
+     *called=All.all[(a_number-600000)]; //Call the account.
     
     if(called->pin_number==pin)
     {
-        cout << "Account balance: $" << called->balance << '\n';
+        cout << "Account balance: $" << called->balance << '\n'; //Print out balance.
     }
     else cout << "Wrong PIN.\n";
 }
 
-void transactions(Bank& All,int a_number)
+void transactions(Bank& All,int a_number) //Check last 10 transactions.
 {
     int pin;
     
@@ -248,13 +248,13 @@ void transactions(Bank& All,int a_number)
     cin >> pin;
     if(!pin) throw runtime_error("Invalid pin number!\n");
     
-    *called=All.all[(a_number-600000)];
+    *called=All.all[(a_number-600000)]; //Call the account
     
     if(called->pin_number==pin)
     {
         for(int i=1;i<11;++i)
         {
-            cout << called->transactions[i] << '\n';
+            cout << called->transactions[i] << '\n'; // Print out the last 10 transactions.
         }
     }
     else cout << "Wrong PIN.\n";
