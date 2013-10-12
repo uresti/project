@@ -10,16 +10,27 @@ using namespace std;
 
 class Customer
 {
+int pin_number;
+    int account_number;
+    double balance;
+    string first_name;
+    string last_name;
+
 public:
-	string first_name;
-	string last_name;
-    	string* transactions;
-	int account_number;
-	int pin_number;
-	int balance;
+    string* transactions;
+
+    int callpin() {return pin_number;};
+    int callan() {return account_number;};
+    string callfn() {return first_name;};
+    string callln() {return last_name;};
+    double callbal() {return balance;};
+    
+    void balwit(double withdraw) {balance=balance-withdraw;};
+    void baldep(double deposit) {balance=balance+deposit;};
 	
-	Customer(const string& f,const string& l ,const int a, const int p, int bal)
-    : first_name(f), last_name(l), account_number(a), pin_number(p), balance(bal), transactions(new string [11]) {}
+	
+	Customer(const string& f,const string& l ,const int a, const int p, double bal)
+    		: first_name(f), last_name(l), account_number(a), pin_number(p), balance(bal), transactions(new string [11]) {};
 
     Customer() {};
 };
