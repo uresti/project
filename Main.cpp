@@ -110,6 +110,7 @@ void withdraw(Bank& All,int a_number) //Withdraw money from an account.
     struct tm * now = localtime( & t );
     
     int pin;
+    int closer=0;
     double withdraw;
     
     cout << "Enter your PIN: \n";
@@ -231,7 +232,7 @@ void deposit(Bank& All,int a_number) //Deposit money into an account.
             called->transactions[i]=called->transactions[i-1]; //Moves all the previous transactions over one in the array.
             if(i==1) called->transactions[1]= '(' + year + '-' + month + '-' + day + ' ' + "Deposit $" + trans + ')'; //Combines all the strings and stores it in the array.
         }
-        cout << "Account balance: $" << ccalled->callbal() << '\n';
+        cout << "Account balance: $" << called->callbal() << '\n';
         All.all[(a_number-600000)]=*called; //Put the account back into the bank.
     }
     else cout << "Wrong PIN.\n";
