@@ -176,7 +176,7 @@ void withdraw(Bank& All,int a_number) //Withdraw money from an account.
                 called->transactions[i]=called->transactions[i-1]; //Moves all the previous transactions over one in the array.
                 if(i==1) called->transactions[1]= '(' + year + '-' + month + '-' + day + ' ' + "Withdraw $" + trans + ')'; //Combines all the strings and stores it in the array.
             }
-            cout << "Account balance: $" << called->balance << '\n';
+            cout << "Account balance: $" << called->callbal() << '\n';
         }
         else if(called->callbal()-withdraw<0) cout << "Insufficient funds.\n";
         else cout << "Can't withdraw more than $500.\n";
@@ -197,18 +197,18 @@ void deposit(Bank& All,int a_number) //Deposit money into an account.
     
     cout << "Enter your PIN: \n";
     cin >> pin;
-    if(!pin) throw runtime_error("Invalid pin number!\n");
+    if(!pin || pin<=999 || pin>=10000) throw runtime_error("Invalid pin number!\n");
     
     *called=All.all[(a_number-600000)]; //Get the account.
     
-    if(called->pin_number==pin)
+    if(called->callpin()==pin)
     {
         cout << "Enter the amount to deposit: $";
         cin >> deposit;
         if((!deposit && deposit<0.00) || deposit<0.00) throw runtime_error("Not a valid deposit amount!\n");
         
 
-        called->balance=called->balance+deposit;
+        called->baldep(deposit);
             
         stringstream year1; //Converts the 'int' year into a 'string'.
         year1 << (now->tm_year+1900);
@@ -231,7 +231,7 @@ void deposit(Bank& All,int a_number) //Deposit money into an account.
             called->transactions[i]=called->transactions[i-1]; //Moves all the previous transactions over one in the array.
             if(i==1) called->transactions[1]= '(' + year + '-' + month + '-' + day + ' ' + "Deposit $" + trans + ')'; //Combines all the strings and stores it in the array.
         }
-        cout << "Account balance: $" << called->balance << '\n';
+        cout << "Account balance: $" << ccalled->callbal() << '\n';
         All.all[(a_number-600000)]=*called; //Put the account back into the bank.
     }
     else cout << "Wrong PIN.\n";
@@ -243,13 +243,13 @@ void account_balance(Bank& All,int a_number) //Check account balance.
 
     cout << "Enter your PIN: \n";
     cin >> pin;
-    if(!pin) throw runtime_error("Invalid pin number!\n");
+    if(!pin || pin<=999 || pin>=10000) throw runtime_error("Invalid pin number!\n");
     
      *called=All.all[(a_number-600000)]; //Call the account.
     
-    if(called->pin_number==pin)
+    if(called->callpin()==pin)
     {
-        cout << "Account balance: $" << called->balance << '\n'; //Print out balance.
+        cout << "Account balance: $" << called->callbal() << '\n'; //Print out balance.
     }
     else cout << "Wrong PIN.\n";
 }
@@ -260,11 +260,11 @@ void transactions(Bank& All,int a_number) //Check last 10 transactions.
     
     cout << "Enter your PIN: \n";
     cin >> pin;
-    if(!pin) throw runtime_error("Invalid pin number!\n");
+    if(!pin || pin<=999 || pin>=10000) throw runtime_error("Invalid pin number!\n");
     
     *called=All.all[(a_number-600000)]; //Call the account
     
-    if(called->pin_number==pin)
+    if(called->callpin()==pin)
     {
         for(int i=1;i<11;++i)
         {
