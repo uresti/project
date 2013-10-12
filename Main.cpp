@@ -374,6 +374,8 @@ int main()
                 if(operation==4) deposit(All,accountnumber);
                 if(operation==5) account_balance(All,accountnumber);
                 if(operation==6) transactions(All,accountnumber);
+                if(operation==7) Statistics(All);//--------------------------------------
+                
                 
                 cout << "Does you wish to carry out another action?(yes/no)\n";
                 cin >> answer;
