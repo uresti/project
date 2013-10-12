@@ -5,8 +5,6 @@
 #include <fstream>
 #include <sstream>
 #include <stdexcept>
-#include "std_lib_facilities_3.h" 
-#include "variables_stat.h"
 
 using namespace std;
 
