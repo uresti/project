@@ -92,10 +92,10 @@ ostream& operator<<(ostream& os, Bank& All) //Cout bank.
         *called=All.all[i];
         if(called->balance!=0)
         {
-            f_out << "[ customer " << called->first_name << ' ' << called->last_name << endl;
-            f_out << "  account " << called->account_number << endl;
-            f_out << "  PIN " << called->pin_number << endl;
-            f_out << "  balance " << called->balance << endl;
+            f_out << "[ customer " << called->callfn() << ' ' << called->callln() << endl;
+            f_out << "  account " << called->callan() << endl;
+            f_out << "  PIN " << called->callpin() << endl;
+            f_out << "  balance " << called->callbal() << endl;
             f_out << "  transcations { ";
             for(int j=1;j<11;++j)
             {
