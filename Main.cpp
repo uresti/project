@@ -35,7 +35,7 @@ void create(Bank& All) //Create an account with the bank.
     for(int i=1;i<100;++i) //The purpose of this 'for loop' is to fill spots in the Bank array before the latest account. This deals with the case that an account has been closed.
     {
         if(((All.a_num-600000)-i)>0) *called=All.all[((All.a_num-600000)-i)]; //Set 'default' account equal to one less than the latest account.
-        if(called->called->callbal()==0 && ((All.a_num-600000)-i)>0)
+        if(called->callbal()==0 && ((All.a_num-600000)-i)>0)
         {
             Customer* A= new Customer(fname,lname,All.a_num-i,pin,balance);
             
