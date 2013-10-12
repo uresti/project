@@ -90,7 +90,7 @@ ostream& operator<<(ostream& os, Bank& All) //Cout bank.
     for(int i=All.low;i<All.vplace;++i)
     {
         *called=All.all[i];
-        if(called->balance!=0)
+        if(called->callbal()!=0)
         {
             f_out << "[ customer " << called->callfn() << ' ' << called->callln() << endl;
             f_out << "  account " << called->callan() << endl;
