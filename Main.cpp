@@ -35,7 +35,7 @@ void create(Bank& All) //Create an account with the bank.
     for(int i=1;i<100;++i) //The purpose of this 'for loop' is to fill spots in the Bank array before the latest account. This deals with the case that an account has been closed.
     {
         if(((All.a_num-600000)-i)>0) *called=All.all[((All.a_num-600000)-i)]; //Set 'default' account equal to one less than the latest account.
-        if(called->balance==0 && ((All.a_num-600000)-i)>0)
+        if(called->called->callbal()==0 && ((All.a_num-600000)-i)>0)
         {
             Customer* A= new Customer(fname,lname,All.a_num-i,pin,balance);
             
@@ -76,23 +76,23 @@ void close(Bank& All) //Close an account with the Bank.
         cout << "Enter your account number: \n";
         cin >> a_number;
         
-        if(!a_number) throw runtime_error("Not a valid account number!\n");
+        if(!a_number || a_number<=600000 || a_number>=All.a_num) throw runtime_error("Not a valid account number!\n");
         
         cout << "Enter your PIN: \n";
         cin >> pin;
         
-        if(!pin) throw runtime_error("Not a valid pin number!\n");
+        if(!pin || pin<=999 || pin>=10000) throw runtime_error("Not a valid pin number!\n");
         
         if(600000<=a_number && a_number<=All.a_num)
         {
             *called=All.all[(a_number-600000)]; //Get the account.
         
-            if(called->pin_number==pin)
+            if(called->callpin()==pin)
             {
-                if(called->balance>500) cout << "You have more than $500. Please see cashier to withdraw money.\n";
+                if(called->callpin()>500) cout << "You have more than $500. Please see cashier to withdraw money.\n";
                 else
                 {
-                    cout << "You have withdrawn: $" << called->balance << '\n';
+                    cout << "You have withdrawn: $" << called->callbal() << '\n';
                     Customer* replace = new Customer("Default","Default",0,1,0);
                     All.all[(a_number-600000)]= *replace; //Replace the account with a 'default account' so that it will not be written out to the file.
                     cout << "Your account has been canceled.\n";
@@ -114,33 +114,46 @@ void withdraw(Bank& All,int a_number) //Withdraw money from an account.
     
     cout << "Enter your PIN: \n";
     cin >> pin;
-    if(!pin) throw runtime_error("Invalid pin number!\n");
+    if(!pin || pin<=999 || pin>=10000) throw runtime_error("Invalid pin number!\n");
     
     *called=All.all[(a_number-600000)]; //Get the account.
 
-    if(called->pin_number==pin)
+    if(called->callpin()==pin)
     {
-        if(called->balance<50) cout << "You do not have sufﬁcient amount of money in your account to maintain it.\n";
-        if(called->balance<1000)
+    	if(called->callbal()<1000)
         {
             cout    << "It will cost you $10 to make a withdraw since your funds are less than $1000!\n"
                     << "If you wish to incur no charge, please withdraw $0.00!\n";
         }
-        
+        else
+        {
+            cout    << "Any withdraw that leaves the account balance below $1000 will incur a $10 fee!\n"
+                    << "If you wish to incur no charge, please withdraw $0.00!\n";
+        }
         
         cout << "Enter the amount to withdraw: $";
         cin >> withdraw;
         if((!withdraw && withdraw<0.00) || withdraw<0.00) throw runtime_error("Not a valid withdraw amount!\n");
         
-        if(called->balance<1000 && withdraw>=0.001) //Used to charge the $10 fee.
+        if(called->callbal()-withdraw<50)
         {
-            cout << "Your funds are less than $1000 thus carring out a withdraw has cost you $10.\n";
-            called->balance=called->balance-10;
+            closer=1;
+        }
+
+        if(called->callbal()-withdraw<1000 && withdraw>=0.001 && closer==0)
+        {
+            cout << "After withdraw, your account balance is less than $1000 thus carring out a withdraw has cost you $10.\n";
+            called->balwit(10);
         }
         
-        if(called->balance-withdraw>0 && withdraw<=500)
+        if(called->callbal()-withdraw<50)
         {
-            called->balance=called->balance-withdraw;
+            cout    << "You do not have sufﬁcient funds in your account to maintain it.\n"
+                    << "You will be required to close your account\n";
+        }
+        else if(called->callbal()-withdraw>0 && withdraw<=500)
+        {
+            called->balwit(withdraw);
             
             stringstream year1; //Converts the 'int' year into a 'string'.
             year1 << (now->tm_year+1900);
@@ -165,10 +178,11 @@ void withdraw(Bank& All,int a_number) //Withdraw money from an account.
             }
             cout << "Account balance: $" << called->balance << '\n';
         }
-        else if(called->balance-withdraw<0) cout << "Insufficient funds.\n";
+        else if(called->callbal()-withdraw<0) cout << "Insufficient funds.\n";
         else cout << "Can't withdraw more than $500.\n";
         
         All.all[(a_number-600000)]=*called; //Put the account back into the bank.
+        if(closer==1) close(All);
     }
     else cout << "Wrong PIN.\n";
 }
