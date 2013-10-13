@@ -1,0 +1,5 @@
+Customer: Reynaldo Uresti
+Account: 51164
+PIN: 9972
+Balance: 6250
+Transactions: {10/12/13__$-250} {10/12/13__$5000} {10/12/13__$1500} 0 0 0 0 0 0 0
