@@ -274,14 +274,14 @@ void Close_account(Bank& Main)
 			vector<string>temp_cust;
 			string customer_file = account_names[i];
 			ifstream cust(customer_file.c_str());
-			string temp input;
+			string temp_input;
 			while(cust>>temp_input)
 			{
 				temp_cust.push_back(temp_input);
 			}
 			string temp = temp_cust[8];
 			stringstream convert;
-			conver<<temp;
+			convert<<temp;
 			double bal = 0;
 			convert>>bal;
 			if (bal>500)
@@ -307,6 +307,53 @@ void Close_account(Bank& Main)
 		else cout<<"You did not close your account."<<endl;
 }
 
+// get info of current user to be able to run other function
+
+void Setup_customer(Customer& blank, double& bal, int& pos, string& tran)
+{
+	int check = 0;
+	pos = 0; 
+	bool correct_pin = false;
+	int i = 0;
+	while (correct_pin == false)
+	{
+		cout<<"Please Log in to your account by entering your PIN now.\n";
+		i = 0;
+		cin>>check;
+		while (i < all_pins.size())
+		{
+			if (check == all_pins[i])
+			{
+				pos = i;
+				correct_pin = true;
+				break;
+			}
+			++i;
+		}
+		if (i == all_pins.size())
+		{
+			cout<< '\n'<<"Incorrect PIN. \n";
+		}
+	}
+	blank.set_position(pos);
+	
+	string customer_file = account_names[pos];
+	ifstream cust(customer_file.c_str());
+	string temp_input;
+	while(cust>>temp_input){
+		customer_files.push_back(temp_input);
+	}
+	string temp = customer_files[8];
+	stringstream convert;
+	convert<<temp;
+	convert>>bal;
+	blank.set_balance(bal);
+	
+	tran = customer_files[9] + ' ' + customer_files[10] + ' ' + customer_files[11]+ ' ' + customer_files[12] + ' ' + customer_files[13] + ' ' + customer_files[14] + ' ' + customer_files[15]  + ' ' + customer_files[16]+ ' ' + customer_files[17] + ' ' + customer_files[18] + ' ' + customer_files[19];
+	blank.set_transactions(tran);
+	cust.close();
+}
+
 //saves any changes of a customer's info to corresponding files
 void finalize_customer(Customer& blank, double& new_bal, int& pos, string& transaction) 
 {
@@ -323,10 +370,10 @@ void finalize_customer(Customer& blank, double& new_bal, int& pos, string& trans
 		
 		customer_files[8] = temp;
 		ofstream ost(file_name.c_str());
-		ost<<customer_files[0] +' '+ customer_files[1] + ' ' + customer_files[2]<<endl; 
-		   <<customer_files[3] +' '+ customer_files[4]<<endl;
-		   <<customer_files[5] +' '+ customer_files[6]<<endl;
-	       <<customer_files[7] +' '+ customer_files[8]<<endl;
+		ost<<customer_files[0] +' '+ customer_files[1] + ' ' + customer_files[2]<<'\n'
+	       <<customer_files[3] +' '+ customer_files[4]<<'\n'
+	       <<customer_files[5] +' '+ customer_files[6]<<'\n'
+	       <<customer_files[7] +' '+ customer_files[8]<<'\n'
 		   <<transaction<<endl;
 		ost.close();
 	}
@@ -369,12 +416,12 @@ void Withdraw_check(Bank& Main, Customer& user, double& money_withdrawn)
 		
 	if (choice != 2) 
 	{
-		money_withdrawn = 0 - money_withdrawn;
+    	money_withdrawn = 0 - money_withdrawn;
 		Main.Bank_deposit (money_withdrawn);
 	}
-	user.set_balance(temp.val);
+	user.set_balance(temp_val);
 }
-
+	
 //function changes the values of customer's files if they choose to withdraw
 //runs withdraw check and runs timestamp func to create a new transantion.
 void Withdraw (int i, Bank& Main, Customer& user, string& trans)
@@ -401,7 +448,7 @@ void Withdraw (int i, Bank& Main, Customer& user, string& trans)
 	check = 0;
 	while (check != cust) 
 	{
-		cout<<"Please enter Pin again for safety reasons."endl;
+		cout<<"Please enter Pin again for safety reasons."<<endl;
 		cin>>check;
 		if (check == cust)
 		{
@@ -418,4 +465,92 @@ void Withdraw (int i, Bank& Main, Customer& user, string& trans)
 	}
 	
 	time_stamp(amount, trans);
+}
+
+//fuctions changes values of the customer's files whe they deposit 
+//runs timestamp function to create new transaction
+
+void Deposit(int i, Bank& Main, Customer& user, string& trans)
+{
+	int cust = all_account_num[i];
+	int check=0;
+	double temp_val=0.0;
+	double amount=0.0;
+	while (check!=cust)
+	{
+		cout<<"Please enter the Account Number"<<endl;
+		cin>>check;
+			if (check == cust){
+				cout<<"Please enter deposit amount."<<endl;
+				cin>>amount; 
+				break;
+			}
+	}
+	user.output_balance(temp_val);
+	temp_val = temp_val + amount;
+	Main.Bank_deposit(amount);
+	user.set_balance(temp_val);
+	time_stamp(amount, trans);
+}
+
+//function gives user ability to vew balance in file
+void Background_Account_balance(Customer& user)
+{	
+	int check = 0;
+	double customer = 0; 
+	bool correct_pin = false;
+	int i = 0;
+	
+	while (correct_pin == false)
+	{
+		cout<<"Please enter Account Number \n";
+		i = 0;
+		cin>>check;
+		while (i < all_account_num.size())
+		{
+			if (check == all_account_num[i])
+			{
+				correct_pin = true;
+				break;
+			}
+			++i;
+		}
+		if (i == all_account_num.size())
+		{
+			cout<< '\n'<<"Incorrect Account Number. \n";
+		}
+	}
+	
+	correct_pin = false;
+	while (correct_pin == false)
+	{
+		cout<<"Please enter Pin one last time for safety precautions"<<endl;
+		cin>>check;
+
+		if (check == all_pins[i])
+		{
+			correct_pin = true;
+			break;
+		}
+
+		else 
+		{
+			cout<< '\n'<<"Incorrect PIN. \n";
+		}
+	}
+	user.output_balance(customer);
+	cout<<"Your balance is: $"<<customer<<endl;
+}
+
+//function runs the precious functions properly wiht the proper variable assigned and checks done.
+void Veiw_account_balance(Customer& me, double& bal, int& posi, string& transact)
+{
+	Setup_customer(me, bal, posi, transact); 
+	Background_Account_balance(me);
+	finalize_customer(me, bal, posi, transact);
+}
+
+//function runs the member function of the Bank class that outputs the bank's information.
+void Statistical_Information (Bank& Main){ //Use this one
+	Main.Bank_info();
 }
