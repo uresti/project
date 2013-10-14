@@ -10,7 +10,7 @@ using namespace std;
 
 class Customer
 {
-int pin_number;
+    int pin_number;
     int account_number;
     double balance;
     string first_name;
@@ -25,8 +25,8 @@ public:
     string callln() {return last_name;};
     double callbal() {return balance;};
     
-    void balwit(double withdraw) {balance=balance-withdraw;};
-    void baldep(double deposit) {balance=balance+deposit;};
+    void balwit(double withdraw) {balance=balance-withdraw;}; //Withdraw
+    void baldep(double deposit) {balance=balance+deposit;}; //Deposit
 	
 	
 	Customer(const string& f,const string& l ,const int a, const int p, double bal)
