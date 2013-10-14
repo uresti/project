@@ -1,22 +1,30 @@
-#include "Statistics.h"
+#include "Customer.h"
 
-class Bank
+class Statistics
 {
+    double total_bal;
+	int total_num_customers;
+	double total_deposit;
 public:
-    int vplace; //Vector placement
-    int a_num; //Account number ~Has been removed.
-    int low; //~Has been removed.
-
-    Customer* all;
+    Statistics(double bal, int customers, double totaldepo)
+    :total_bal(bal), total_num_customers(customers), total_deposit(totaldepo) {};
     
-    Bank()
-    : all(new Customer[100]),vplace(0),a_num(600001),low(100){}
+    Statistics() {};
     
-    void fill();
-    void create(Statistics& Info);
-    void close(Statistics& Info);
-    void withdraw(int a_number,Statistics& Info);
-    void deposit(int a_number,Statistics& Info);
-    void account_balance(int a_number);
-    void transactions(int a_number);
+    void isetup_stat();
+	void finalize_stat();
+    
+	int total_customers() {return total_num_customers;};
+	double total_deposits(){return total_deposit;};
+	double average_money(){return total_bal/total_num_customers;};
+    
+    void stat_deposit(double money) {total_bal=total_bal+money;}; //Add to total balance.
+    void stat_withdraw(double money) {total_bal=total_bal-money;}; //Subtract from total balance.
+    
+    void tot_deposit(double money) {total_deposit=total_deposit+money;}; //Add to total deposit.
+    
+    void addcustomer() {++total_num_customers;};
+    void subcustomer() {--total_num_customers;};
+    
+	void info();
 };
